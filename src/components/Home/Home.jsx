@@ -2,7 +2,7 @@ import React from 'react';
 import logo from "./logoo.png";
 import styles from "./Home.module.css";
 
-import {Navigate, useNavigate} from "react-router-dom";
+//import {Navigate, useNavigate} from "react-router-dom";
 
 function Home() {
       
@@ -20,8 +20,7 @@ function Home() {
               
         
     </div>
-   // <button className={styles.green_btn} onClick={navToDash}>LOGIN via TAB</button>
-          
+   
   )
 }
 
