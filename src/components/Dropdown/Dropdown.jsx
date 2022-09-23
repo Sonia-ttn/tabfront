@@ -2,7 +2,7 @@ import Form from "react-bootstrap/Form";
 
 function Dropdown() {
   return (
-    <Form.Select aria-label="Default select example">
+    <Form.Select aria-label="Default select example" className="text-secondary">
       <option>Open this select menu</option>
       <option value="1">One</option>
       <option value="2">Two</option>

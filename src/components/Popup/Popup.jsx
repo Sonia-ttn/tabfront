@@ -12,22 +12,24 @@ const Popup = () => {
 
   return (
     <>
-      <Button variant="success" onClick={handleShow}>
+      <Button onClick={handleShow} className={styles.addbutton}>
         Add
       </Button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header>
-          {/* <Modal.Title className={styles.modalheading}> */}
           <h3 className={styles.modalheading}>Add Configuration</h3>
-          {/* </Modal.Title> */}
         </Modal.Header>
         <Modal.Body>
           <Menu />
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="success" onClick={handleClose}>
-            Submit
+        <Modal.Footer className={styles.modalfooter}>
+          <Button
+            variant="success"
+            onClick={handleClose}
+            className={styles.savebutton}
+          >
+            Save
           </Button>
         </Modal.Footer>
       </Modal>

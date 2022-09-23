@@ -1,0 +1,32 @@
+.menuheading {
+  margin: auto;
+  align-items: center;
+  width: 70%;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.radiobutton {
+  font-weight: 500;
+  padding: 20px 0px;
+  width: 60%;
+  margin: auto;
+}
+
+.radiobutton span {
+  padding-right: 15px;
+}
+
+.popular {
+  width: 70%;
+  margin: auto;
+}
+
+.label {
+  font-weight: 500;
+  text-align: right;
+}
+
+.input {
+  padding: 3px 7px;
+}
