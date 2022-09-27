@@ -13,7 +13,7 @@ const Popup = () => {
   return (
     <>
       <Button onClick={handleShow} className={styles.addbutton}>
-        Add
+        Add New
       </Button>
 
       <Modal show={show} onHide={handleClose}>
