@@ -12,8 +12,7 @@ const animatedComponents = makeAnimated();
 
 function Menu({ modalClose }) {
   const [type, setType] = useState(true);
-  const [popularCheckbox, setPopularCheckbox] = useState(true);
-  const [featuredCheckbox, setFeaturedCheckbox] = useState(true);
+  const [checkbox, setCheckbox] = useState(true);
   const [sportData, setSportData] = useState([]);
   const [competiton, setCompetition] = useState([]);
   const [match, setMatch] = useState([]);
@@ -21,16 +20,30 @@ function Menu({ modalClose }) {
   // const [market, setMarket] = useState([]);
   const [propositions, setPropositions] = useState([]);
 
+  const [record, setRecord] = useState({
+    type: type ? "popular" : "featured",
+    sportName: null,
+    compName: null,
+    matchId: null,
+    matchName: null,
+    numberOfBets: "",
+    minLegs: "",
+    maxLegs: "",
+    minPrice: "",
+    maxPrice: "",
+    tournamentName: null,
+    propositions: [],
+    enabled: true,
+  });
+
   const handleRadioButton = (e) => {
     setType(e.target.checked);
+    setRecord({ ...record, type: e.target.checked });
   };
 
-  const handlePopularCheckbox = (e) => {
-    setPopularCheckbox(e.target.checked);
-  };
-
-  const handleFeaturedCheckbox = (e) => {
-    setFeaturedCheckbox(e.target.checked);
+  const handleCheckbox = (e) => {
+    setCheckbox(e.target.checked);
+    setRecord({ ...record, enabled: e.target.checked });
   };
 
   useEffect(() => {
@@ -47,11 +60,10 @@ function Menu({ modalClose }) {
   };
 
   //Get Competition Data
-  let sportId = null;
   let abc = null;
   const handleChange = (e) => {
-    sportId = e.target.value;
     abc = sportData.find((element) => element.spectrumId === e.target.value);
+    setRecord({ ...record, sportName: abc.name });
     setCompetition(abc.competitions);
   };
 
@@ -64,6 +76,7 @@ function Menu({ modalClose }) {
     const competitionData = competiton.find(
       (element) => element.spectrumId === competitionId
     );
+    setRecord({ ...record, compName: competitionData.name });
     matchUrl = competitionData._links.matches;
     tournamentUrl = competitionData._links.tournaments;
     getMatchOrTournamentData(competitionData);
@@ -85,14 +98,19 @@ function Menu({ modalClose }) {
   //Get the id of either selected match or tournament
   let uniqueId = null;
   let marketUrl = null;
-  let mData = null;
-  let tData = null;
   const handleMatch = (e) => {
     uniqueId = e.target.value;
-    mData = match.find(
+    const mData = match.find(
       (element) => element.spectrumUniqueId === parseInt(uniqueId)
     );
-    tData = tournament.find((element) => element.spectrumId === uniqueId);
+    setRecord({
+      ...record,
+      matchId: mData?.spectrumUniqueId,
+      matchName: mData?.name,
+    });
+    const tData = tournament.find((element) => element.spectrumId === uniqueId);
+    // console.log(tData);
+    setRecord({ ...record, tournamentName: tData?.name });
     marketUrl = mData == null ? tData._links.markets : mData._links.markets;
     getMarketData();
   };
@@ -110,7 +128,6 @@ function Menu({ modalClose }) {
 
   function getPropositions(data) {
     const result = [];
-    // console.log("data", data);
     data?.forEach((element) => {
       const { betOption, propositions } = element;
       if (propositions) {
@@ -138,9 +155,21 @@ function Menu({ modalClose }) {
     return result;
   }
 
+  const handleInput = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setRecord({ ...record, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    modalClose();
+    console.log(record);
+  };
+
   return (
     <>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <div className={styles.radiobutton}>
           <span>Type</span>
           <Form.Check
@@ -247,7 +276,13 @@ function Menu({ modalClose }) {
                   Min No of Bets Placed
                 </Form.Label>
                 <Col sm="5">
-                  <Form.Control type="number" className={styles.input} />
+                  <Form.Control
+                    type="number"
+                    className={styles.input}
+                    name="numberOfBets"
+                    value={record.numberOfBets}
+                    onChange={handleInput}
+                  />
                 </Col>
               </Form.Group>
               <Form.Group
@@ -259,7 +294,13 @@ function Menu({ modalClose }) {
                   Min No of Legs
                 </Form.Label>
                 <Col sm="5">
-                  <Form.Control type="number" className={styles.input} />
+                  <Form.Control
+                    type="number"
+                    className={styles.input}
+                    name="minLegs"
+                    value={record.minLegs}
+                    onChange={handleInput}
+                  />
                 </Col>
               </Form.Group>
               <Form.Group
@@ -271,7 +312,13 @@ function Menu({ modalClose }) {
                   Max No of Legs
                 </Form.Label>
                 <Col sm="5">
-                  <Form.Control type="number" className={styles.input} />
+                  <Form.Control
+                    type="number"
+                    className={styles.input}
+                    name="maxLegs"
+                    value={record.maxLegs}
+                    onChange={handleInput}
+                  />
                 </Col>
               </Form.Group>
               <Form.Group
@@ -283,7 +330,13 @@ function Menu({ modalClose }) {
                   Min Price
                 </Form.Label>
                 <Col sm="5">
-                  <Form.Control type="number" className={styles.input} />
+                  <Form.Control
+                    type="number"
+                    className={styles.input}
+                    name="minPrice"
+                    value={record.minPrice}
+                    onChange={handleInput}
+                  />
                 </Col>
               </Form.Group>
               <Form.Group
@@ -295,7 +348,13 @@ function Menu({ modalClose }) {
                   Max Price
                 </Form.Label>
                 <Col sm="5">
-                  <Form.Control type="number" className={styles.input} />
+                  <Form.Control
+                    type="number"
+                    className={styles.input}
+                    name="maxPrice"
+                    value={record.maxPrice}
+                    onChange={handleInput}
+                  />
                 </Col>
               </Form.Group>
               <Form.Group
@@ -310,8 +369,8 @@ function Menu({ modalClose }) {
                   <Form.Check
                     type="checkbox"
                     className={`${styles.input} ${styles.checkbox}`}
-                    checked={popularCheckbox}
-                    onChange={handlePopularCheckbox}
+                    checked={checkbox}
+                    onChange={handleCheckbox}
                   />
                 </Col>
               </Form.Group>
@@ -344,8 +403,8 @@ function Menu({ modalClose }) {
                 <Form.Check
                   type="checkbox"
                   className={`${styles.input} ${styles.checkbox}`}
-                  checked={featuredCheckbox}
-                  onChange={handleFeaturedCheckbox}
+                  checked={checkbox}
+                  onChange={handleCheckbox}
                 />
               </Col>
             </Form.Group>
@@ -355,7 +414,7 @@ function Menu({ modalClose }) {
           <Button
             className={styles.savebutton}
             type="submit"
-            onClick={modalClose}
+            // onClick={modalClose}
           >
             Send
           </Button>
