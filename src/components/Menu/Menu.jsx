@@ -18,7 +18,7 @@ function Menu({ modalClose }) {
   const [competiton, setCompetition] = useState([]);
   const [match, setMatch] = useState([]);
   const [tournament, setTournament] = useState([]);
-  const [market, setMarket] = useState([]);
+  // const [market, setMarket] = useState([]);
   const [propositions, setPropositions] = useState([]);
 
   const handleRadioButton = (e) => {
@@ -44,7 +44,6 @@ function Menu({ modalClose }) {
     );
     const data = await res.json();
     setSportData(data.sports);
-    // console.log(data.sports);
   };
 
   //Get Competition Data
@@ -60,20 +59,18 @@ function Menu({ modalClose }) {
   let competitionId = null;
   let matchUrl = null;
   let tournamentUrl = null;
-  let competitionData = null;
   const handleCompetition = (e) => {
     competitionId = e.target.value;
-    competitionData = competiton.find(
+    const competitionData = competiton.find(
       (element) => element.spectrumId === competitionId
     );
     matchUrl = competitionData._links.matches;
     tournamentUrl = competitionData._links.tournaments;
-    getMatchOrTournamentData();
+    getMatchOrTournamentData(competitionData);
   };
 
   //Get Match or Tournament Data
-  const getMatchOrTournamentData = async () => {
-    // console.log(competitionData);
+  const getMatchOrTournamentData = async (competitionData) => {
     if (competitionData.tournaments.length === 0) {
       const resForMatches = await fetch(`${matchUrl}`);
       const matchesData = await resForMatches.json();
@@ -91,14 +88,12 @@ function Menu({ modalClose }) {
   let mData = null;
   let tData = null;
   const handleMatch = (e) => {
-    // console.log("competition", competitionData);
     uniqueId = e.target.value;
     mData = match.find(
       (element) => element.spectrumUniqueId === parseInt(uniqueId)
     );
     tData = tournament.find((element) => element.spectrumId === uniqueId);
     marketUrl = mData == null ? tData._links.markets : mData._links.markets;
-    // console.log(marketUrl);
     getMarketData();
   };
 
@@ -106,26 +101,19 @@ function Menu({ modalClose }) {
   const getMarketData = async () => {
     const res = await fetch(`${marketUrl}`);
     const data = await res.json();
-    // console.log(competitionData);
-    if (competitionData?.tournaments?.length === 0) {
-      console.log("market");
-      setMarket(data.markets);
+    if (data.markets) {
       setPropositions(getPropositions(data.markets));
     } else {
-      console.log("matches");
-      setMarket(data.matches);
       setPropositions(getPropositions(data.matches));
     }
   };
 
   function getPropositions(data) {
     const result = [];
-    console.log(data);
+    // console.log("data", data);
     data?.forEach((element) => {
       const { betOption, propositions } = element;
-      console.log(propositions);
       if (propositions) {
-        console.log("propositions");
         propositions.forEach((propelement) =>
           result.push({
             value: `${betOption} : ${propelement.name}`,
@@ -149,7 +137,6 @@ function Menu({ modalClose }) {
     });
     return result;
   }
-  // console.log(getPropositions(market));
 
   return (
     <>
@@ -336,11 +323,11 @@ function Menu({ modalClose }) {
               <div className={styles.menuheading}>
                 Propositions
                 <Select
-                  placeholder="Select Propositions"
                   closeMenuOnSelect={false}
                   components={animatedComponents}
                   isMulti
                   options={propositions}
+                  placeholder="Select Propositions"
                 />
               </div>
             </InputGroup>
