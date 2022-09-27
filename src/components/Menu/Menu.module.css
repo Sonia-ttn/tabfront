@@ -30,3 +30,29 @@
 .input {
   padding: 3px 7px;
 }
+
+/* .checkbox:checked {
+  background-color: green !important;
+  border-color: green !important;
+} */
+
+/* #formBasicCheckbox :checked {
+  background-color: green !important;
+  border-color: green !important;
+} */
+/* .form-check-input:checked {
+  background-color: green !important;
+  border-color: green !important;
+} */
+
+.savebuttondiv {
+  margin: 20px 0px;
+  text-align: center;
+}
+
+.savebutton {
+  padding: 6px 40px;
+  font-weight: 600;
+  background-color: green !important;
+  border: none;
+}

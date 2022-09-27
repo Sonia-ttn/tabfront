@@ -21,17 +21,8 @@ const Popup = () => {
           <h3 className={styles.modalheading}>Add Configuration</h3>
         </Modal.Header>
         <Modal.Body>
-          <Menu />
+          <Menu modalClose={handleClose} />
         </Modal.Body>
-        <Modal.Footer className={styles.modalfooter}>
-          <Button
-            variant="success"
-            onClick={handleClose}
-            className={styles.savebutton}
-          >
-            Save
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   );
